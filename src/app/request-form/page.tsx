@@ -60,17 +60,25 @@ export default function PublicRequestForm() {
         }),
       })
 
-      const data = await res.json()
+      let data
+      try {
+        data = await res.json()
+      } catch {
+        setError(`Server error (status ${res.status}). Please try again.`)
+        setLoading(false)
+        return
+      }
 
       if (!res.ok) {
-        setError(data.error || 'Something went wrong.')
+        setError(data.error || `Error (status ${res.status})`)
         setLoading(false)
         return
       }
 
       setSubmitted(true)
-    } catch {
-      setError('Failed to submit. Please try again.')
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Unknown error'
+      setError(`Failed to submit: ${message}`)
     } finally {
       setLoading(false)
     }
