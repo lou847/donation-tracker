@@ -100,7 +100,7 @@ export default function PublicRequestForm() {
             Thank you for your donation request! Our team will review it and follow up with you at <strong>{contactEmail}</strong>.
           </p>
           <p style={{ fontSize: '14px', color: '#9ca3af', marginTop: '24px' }}>
-            Please allow 1-2 weeks for a response.
+            We typically respond within 7 days.
           </p>
         </div>
       </div>
@@ -208,8 +208,8 @@ export default function PublicRequestForm() {
                 flexShrink: 0,
               }}>2</div>
               <div>
-                <p style={{ fontSize: '15px', fontWeight: 600, color: '#111827', marginBottom: '2px' }}>We review requests as they come in</p>
-                <p style={{ fontSize: '14px', color: '#6b7280', lineHeight: 1.5 }}>Our team reviews each donation request individually. We work from a quarterly giving budget, which means availability may vary throughout the quarter.</p>
+                <p style={{ fontSize: '15px', fontWeight: 600, color: '#111827', marginBottom: '2px' }}>We review requests within 7 days</p>
+                <p style={{ fontSize: '14px', color: '#6b7280', lineHeight: 1.5 }}>Our team reviews each donation request as it comes in. We operate on a quarterly giving budget, so our ability to give may be limited depending on where we are in the quarter.</p>
               </div>
             </div>
 
