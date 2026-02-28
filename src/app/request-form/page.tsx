@@ -97,10 +97,10 @@ export default function PublicRequestForm() {
             Request Submitted!
           </h1>
           <p style={{ fontSize: '18px', color: '#4b5563', lineHeight: 1.7, maxWidth: '480px', margin: '0 auto' }}>
-            Thank you for your donation request. Our team will review it during our quarterly review process and follow up with you at <strong>{contactEmail}</strong>.
+            Thank you for your donation request! Our team will review it and follow up with you at <strong>{contactEmail}</strong>.
           </p>
           <p style={{ fontSize: '14px', color: '#9ca3af', marginTop: '24px' }}>
-            Please allow 2-4 weeks for a response.
+            Please allow 1-2 weeks for a response.
           </p>
         </div>
       </div>
@@ -208,8 +208,8 @@ export default function PublicRequestForm() {
                 flexShrink: 0,
               }}>2</div>
               <div>
-                <p style={{ fontSize: '15px', fontWeight: 600, color: '#111827', marginBottom: '2px' }}>Quarterly review</p>
-                <p style={{ fontSize: '14px', color: '#6b7280', lineHeight: 1.5 }}>We set a giving budget each quarter and review all requests together. This helps us support as many organizations as possible.</p>
+                <p style={{ fontSize: '15px', fontWeight: 600, color: '#111827', marginBottom: '2px' }}>We review requests as they come in</p>
+                <p style={{ fontSize: '14px', color: '#6b7280', lineHeight: 1.5 }}>Our team reviews each donation request individually. We work from a quarterly giving budget, which means availability may vary throughout the quarter.</p>
               </div>
             </div>
 
@@ -229,7 +229,7 @@ export default function PublicRequestForm() {
               }}>3</div>
               <div>
                 <p style={{ fontSize: '15px', fontWeight: 600, color: '#111827', marginBottom: '2px' }}>We&apos;ll be in touch</p>
-                <p style={{ fontSize: '14px', color: '#6b7280', lineHeight: 1.5 }}>Our team will reach out to let you know if we&apos;re able to fulfill your request. Our primary form of giving is Hometown Coffee gift cards.</p>
+                <p style={{ fontSize: '14px', color: '#6b7280', lineHeight: 1.5 }}>Our team will follow up to let you know the status of your request. Our primary form of giving is Hometown Coffee gift cards.</p>
               </div>
             </div>
           </div>
@@ -243,7 +243,7 @@ export default function PublicRequestForm() {
             color: '#92400e',
             lineHeight: 1.5,
           }}>
-            <strong>Please note:</strong> Due to the volume of requests we receive, we&apos;re unable to fulfill every donation request. Submitting a request does not guarantee a donation. We appreciate your understanding.
+            <strong>Please note:</strong> We love supporting our community, but our giving is limited by a quarterly budget. Due to the volume of requests we receive, we may not be able to fulfill every one. Submitting a request does not guarantee a donation. We appreciate your understanding!
           </div>
         </div>
 
