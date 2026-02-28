@@ -26,10 +26,11 @@ export async function POST(request: Request) {
       )
     }
 
-    // Use the anon key since we have open RLS policies
+    // Use service role key to bypass RLS (server-side only, never exposed to browser)
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      supabaseKey
     )
 
     // Check if requester already exists by email
@@ -68,8 +69,9 @@ export async function POST(request: Request) {
         .single()
 
       if (reqError || !newRequester) {
+        console.error('Failed to create requester:', reqError)
         return NextResponse.json(
-          { error: 'Failed to create request. Please try again.' },
+          { error: `Failed to create request: ${reqError?.message || 'Unknown error'}` },
           { status: 500 }
         )
       }
@@ -91,14 +93,16 @@ export async function POST(request: Request) {
       })
 
     if (donationError) {
+      console.error('Failed to create donation request:', donationError)
       return NextResponse.json(
-        { error: 'Failed to submit request. Please try again.' },
+        { error: `Failed to submit request: ${donationError.message}` },
         { status: 500 }
       )
     }
 
     return NextResponse.json({ success: true })
-  } catch {
+  } catch (err) {
+    console.error('Public request error:', err)
     return NextResponse.json(
       { error: 'Something went wrong. Please try again.' },
       { status: 500 }
