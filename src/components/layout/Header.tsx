@@ -1,25 +1,16 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
+import { usePathname } from 'next/navigation'
 
 export function Header() {
   const pathname = usePathname()
-  const router = useRouter()
 
   const navItems = [
     { href: '/', label: 'Dashboard' },
     { href: '/requests', label: 'Requests' },
     { href: '/requesters', label: 'Requesters' },
   ]
-
-  const handleSignOut = async () => {
-    const supabase = createClient()
-    await supabase.auth.signOut()
-    router.push('/login')
-    router.refresh()
-  }
 
   return (
     <header style={{
@@ -31,7 +22,6 @@ export function Header() {
       background: '#0C2340',
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'space-between',
       padding: '0 24px',
       zIndex: 100,
       boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
@@ -77,21 +67,6 @@ export function Header() {
           })}
         </nav>
       </div>
-
-      <button
-        onClick={handleSignOut}
-        style={{
-          padding: '8px 16px',
-          background: 'rgba(255,255,255,0.1)',
-          color: 'white',
-          border: '1px solid rgba(255,255,255,0.2)',
-          borderRadius: '8px',
-          fontSize: '14px',
-          cursor: 'pointer',
-        }}
-      >
-        Sign out
-      </button>
     </header>
   )
 }
