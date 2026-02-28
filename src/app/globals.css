@@ -3,8 +3,10 @@
 :root {
   --hometown-navy: #0C2340;
   --uptown-blue: #5a8fc4;
-  --background: #f3f4f6;
-  --foreground: #111827;
+  --tan: #ddd8cc;
+  --black: #000000;
+  --background: #ddd8cc;
+  --foreground: #0C2340;
 }
 
 body {
@@ -26,7 +28,7 @@ a {
 /* Remove default Next.js dark mode */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #f3f4f6;
-    --foreground: #111827;
+    --background: #ddd8cc;
+    --foreground: #0C2340;
   }
 }

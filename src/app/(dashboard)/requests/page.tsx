@@ -29,8 +29,8 @@ export default function RequestsPage() {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <div>
-          <h1 style={{ fontSize: '28px', fontWeight: 700, color: '#111827' }}>Donation Requests</h1>
-          <p style={{ color: '#6b7280', marginTop: '4px' }}>
+          <h1 style={{ fontSize: '28px', fontWeight: 700, color: '#0C2340' }}>Donation Requests</h1>
+          <p style={{ color: '#5a8fc4', marginTop: '4px', fontWeight: 500 }}>
             {filteredRequests.length} request{filteredRequests.length !== 1 ? 's' : ''}
           </p>
         </div>
@@ -61,7 +61,7 @@ export default function RequestsPage() {
           onChange={(e) => setSearch(e.target.value)}
           style={{
             padding: '10px 14px',
-            border: '1px solid #d1d5db',
+            border: '1px solid #000000',
             borderRadius: '8px',
             fontSize: '14px',
             width: '280px',
@@ -74,7 +74,7 @@ export default function RequestsPage() {
           onChange={(e) => setStatusFilter((e.target.value || null) as DonationRequestStatus | null)}
           style={{
             padding: '10px 14px',
-            border: '1px solid #d1d5db',
+            border: '1px solid #000000',
             borderRadius: '8px',
             fontSize: '14px',
             outline: 'none',
@@ -93,30 +93,30 @@ export default function RequestsPage() {
       <div style={{
         background: 'white',
         borderRadius: '12px',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
-        border: '1px solid #e5e7eb',
+        boxShadow: '0 2px 8px rgba(12,35,64,0.06)',
+        border: '1px solid #000000',
         overflow: 'hidden',
       }}>
         {loading ? (
-          <div style={{ padding: '48px', textAlign: 'center', color: '#6b7280' }}>Loading...</div>
+          <div style={{ padding: '48px', textAlign: 'center', color: '#0C2340' }}>Loading...</div>
         ) : filteredRequests.length === 0 ? (
-          <div style={{ padding: '48px', textAlign: 'center', color: '#6b7280' }}>
+          <div style={{ padding: '48px', textAlign: 'center', color: '#0C2340' }}>
             <p style={{ fontSize: '16px', marginBottom: '8px' }}>No requests found</p>
-            <Link href="/requests/new" style={{ color: '#0C2340', fontWeight: 600, textDecoration: 'none' }}>
+            <Link href="/requests/new" style={{ color: '#5a8fc4', fontWeight: 600, textDecoration: 'none' }}>
               Create your first request &rarr;
             </Link>
           </div>
         ) : (
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
-              <tr style={{ background: '#f9fafb' }}>
-                <th style={{ padding: '12px 20px', textAlign: 'left', fontSize: '12px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>Date</th>
-                <th style={{ padding: '12px 20px', textAlign: 'left', fontSize: '12px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>Organization</th>
-                <th style={{ padding: '12px 20px', textAlign: 'left', fontSize: '12px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>Event</th>
-                <th style={{ padding: '12px 20px', textAlign: 'left', fontSize: '12px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>Category</th>
-                <th style={{ padding: '12px 20px', textAlign: 'right', fontSize: '12px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>Requested</th>
-                <th style={{ padding: '12px 20px', textAlign: 'right', fontSize: '12px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>Approved</th>
-                <th style={{ padding: '12px 20px', textAlign: 'center', fontSize: '12px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase' }}>Status</th>
+              <tr style={{ background: '#5a8fc4' }}>
+                <th style={{ padding: '12px 20px', textAlign: 'left', fontSize: '12px', fontWeight: 600, color: 'white', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Date</th>
+                <th style={{ padding: '12px 20px', textAlign: 'left', fontSize: '12px', fontWeight: 600, color: 'white', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Organization</th>
+                <th style={{ padding: '12px 20px', textAlign: 'left', fontSize: '12px', fontWeight: 600, color: 'white', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Event</th>
+                <th style={{ padding: '12px 20px', textAlign: 'left', fontSize: '12px', fontWeight: 600, color: 'white', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Category</th>
+                <th style={{ padding: '12px 20px', textAlign: 'right', fontSize: '12px', fontWeight: 600, color: 'white', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Requested</th>
+                <th style={{ padding: '12px 20px', textAlign: 'right', fontSize: '12px', fontWeight: 600, color: 'white', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Approved</th>
+                <th style={{ padding: '12px 20px', textAlign: 'center', fontSize: '12px', fontWeight: 600, color: 'white', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Status</th>
               </tr>
             </thead>
             <tbody>
@@ -124,30 +124,30 @@ export default function RequestsPage() {
                 const statusConf = STATUS_CONFIG[req.status] || STATUS_CONFIG.new
                 const categoryConf = CATEGORY_CONFIG[req.requester?.category] || CATEGORY_CONFIG.other
                 return (
-                  <tr key={req.id} style={{ borderTop: '1px solid #e5e7eb', cursor: 'pointer' }}>
-                    <td style={{ padding: '14px 20px', fontSize: '14px', color: '#6b7280' }}>
+                  <tr key={req.id} style={{ borderTop: '1px solid #ddd8cc', cursor: 'pointer' }}>
+                    <td style={{ padding: '14px 20px', fontSize: '14px', color: '#5a8fc4' }}>
                       {formatDate(req.request_date)}
                     </td>
                     <td style={{ padding: '14px 20px' }}>
                       <Link href={`/requests/${req.id}`} style={{
-                        color: '#111827',
-                        fontWeight: 500,
+                        color: '#0C2340',
+                        fontWeight: 600,
                         fontSize: '14px',
                         textDecoration: 'none',
                       }}>
                         {req.requester?.org_name || 'Unknown'}
                       </Link>
                     </td>
-                    <td style={{ padding: '14px 20px', fontSize: '14px', color: '#6b7280' }}>
+                    <td style={{ padding: '14px 20px', fontSize: '14px', color: '#5a8fc4' }}>
                       {req.event_name || '--'}
                     </td>
                     <td style={{ padding: '14px 20px', fontSize: '13px', color: categoryConf.color, fontWeight: 500 }}>
                       {categoryConf.label}
                     </td>
-                    <td style={{ padding: '14px 20px', textAlign: 'right', fontSize: '14px', fontWeight: 500, color: '#111827' }}>
+                    <td style={{ padding: '14px 20px', textAlign: 'right', fontSize: '14px', fontWeight: 600, color: '#0C2340' }}>
                       {formatCurrency(req.amount_requested)}
                     </td>
-                    <td style={{ padding: '14px 20px', textAlign: 'right', fontSize: '14px', fontWeight: 500, color: '#059669' }}>
+                    <td style={{ padding: '14px 20px', textAlign: 'right', fontSize: '14px', fontWeight: 600, color: '#059669' }}>
                       {formatCurrency(req.amount_approved)}
                     </td>
                     <td style={{ padding: '14px 20px', textAlign: 'center' }}>

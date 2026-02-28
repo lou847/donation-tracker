@@ -24,20 +24,21 @@ export function Header() {
       alignItems: 'center',
       padding: '0 24px',
       zIndex: 100,
-      boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+      borderBottom: '3px solid #5a8fc4',
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
         <Link href="/" style={{
           color: 'white',
           textDecoration: 'none',
-          fontSize: '18px',
+          fontSize: '20px',
           fontWeight: 700,
+          letterSpacing: '0.5px',
           display: 'flex',
           alignItems: 'center',
-          gap: '8px',
+          gap: '10px',
         }}>
-          <span>&#10084;&#65039;</span>
-          Donation Tracker
+          <span style={{ fontSize: '22px' }}>&#9749;</span>
+          Hometown Donation Tracker
         </Link>
 
         <nav style={{ display: 'flex', gap: '4px' }}>
@@ -53,12 +54,12 @@ export function Header() {
                 style={{
                   padding: '8px 16px',
                   borderRadius: '8px',
-                  color: 'white',
+                  color: isActive ? 'white' : 'rgba(255,255,255,0.7)',
                   textDecoration: 'none',
                   fontSize: '14px',
-                  fontWeight: 500,
-                  background: isActive ? 'rgba(255,255,255,0.15)' : 'transparent',
-                  transition: 'background 0.15s',
+                  fontWeight: isActive ? 600 : 500,
+                  background: isActive ? '#5a8fc4' : 'transparent',
+                  transition: 'all 0.15s',
                 }}
               >
                 {item.label}

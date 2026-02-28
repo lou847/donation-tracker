@@ -98,27 +98,28 @@ export default function NewRequestPage() {
   const inputStyle = {
     width: '100%',
     padding: '10px 14px',
-    border: '1px solid #d1d5db',
+    border: '1px solid #000000',
     borderRadius: '8px',
     fontSize: '14px',
     outline: 'none',
+    background: 'white',
   }
 
   const labelStyle = {
     display: 'block',
     fontSize: '14px',
-    fontWeight: 500 as const,
-    color: '#374151',
+    fontWeight: 600 as const,
+    color: '#0C2340',
     marginBottom: '4px',
   }
 
   return (
     <div style={{ maxWidth: '700px', margin: '0 auto', padding: '32px 24px' }}>
       <div style={{ marginBottom: '24px' }}>
-        <Link href="/requests" style={{ color: '#6b7280', fontSize: '14px', textDecoration: 'none' }}>
+        <Link href="/requests" style={{ color: '#5a8fc4', fontSize: '14px', textDecoration: 'none', fontWeight: 500 }}>
           &larr; Back to requests
         </Link>
-        <h1 style={{ fontSize: '28px', fontWeight: 700, color: '#111827', marginTop: '8px' }}>
+        <h1 style={{ fontSize: '28px', fontWeight: 700, color: '#0C2340', marginTop: '8px' }}>
           New Donation Request
         </h1>
       </div>
@@ -129,11 +130,11 @@ export default function NewRequestPage() {
           background: 'white',
           padding: '24px',
           borderRadius: '12px',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
-          border: '1px solid #e5e7eb',
+          boxShadow: '0 2px 8px rgba(12,35,64,0.06)',
+          border: '1px solid #000000',
           marginBottom: '20px',
         }}>
-          <h2 style={{ fontSize: '16px', fontWeight: 600, color: '#111827', marginBottom: '16px' }}>
+          <h2 style={{ fontSize: '16px', fontWeight: 600, color: '#0C2340', marginBottom: '16px' }}>
             Requester
           </h2>
 
@@ -155,7 +156,7 @@ export default function NewRequestPage() {
                 onClick={() => setShowNewRequester(true)}
                 style={{
                   marginTop: '12px',
-                  color: '#0C2340',
+                  color: '#5a8fc4',
                   fontSize: '14px',
                   fontWeight: 600,
                   background: 'none',
@@ -201,13 +202,14 @@ export default function NewRequestPage() {
                 type="button"
                 onClick={() => setShowNewRequester(false)}
                 style={{
-                  color: '#6b7280',
+                  color: '#5a8fc4',
                   fontSize: '14px',
                   background: 'none',
                   border: 'none',
                   cursor: 'pointer',
                   padding: 0,
                   alignSelf: 'flex-start',
+                  fontWeight: 500,
                 }}
               >
                 &larr; Select existing organization instead
@@ -221,11 +223,11 @@ export default function NewRequestPage() {
           background: 'white',
           padding: '24px',
           borderRadius: '12px',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
-          border: '1px solid #e5e7eb',
+          boxShadow: '0 2px 8px rgba(12,35,64,0.06)',
+          border: '1px solid #000000',
           marginBottom: '20px',
         }}>
-          <h2 style={{ fontSize: '16px', fontWeight: 600, color: '#111827', marginBottom: '16px' }}>
+          <h2 style={{ fontSize: '16px', fontWeight: 600, color: '#0C2340', marginBottom: '16px' }}>
             Request Details
           </h2>
 
@@ -290,9 +292,9 @@ export default function NewRequestPage() {
         <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
           <Link href="/requests" style={{
             padding: '10px 20px',
-            border: '1px solid #d1d5db',
+            border: '1px solid #000000',
             borderRadius: '8px',
-            color: '#374151',
+            color: '#0C2340',
             textDecoration: 'none',
             fontSize: '14px',
             fontWeight: 500,

@@ -110,7 +110,7 @@ export default function RequestDetailPage() {
 
   if (loading || !request) {
     return (
-      <div style={{ padding: '32px', textAlign: 'center', color: '#6b7280' }}>Loading...</div>
+      <div style={{ padding: '32px', textAlign: 'center', color: '#0C2340' }}>Loading...</div>
     )
   }
 
@@ -120,24 +120,25 @@ export default function RequestDetailPage() {
   const inputStyle = {
     width: '100%',
     padding: '10px 14px',
-    border: '1px solid #d1d5db',
+    border: '1px solid #000000',
     borderRadius: '8px',
     fontSize: '14px',
     outline: 'none',
+    background: 'white',
   }
 
   const labelStyle = {
     display: 'block' as const,
     fontSize: '14px',
     fontWeight: 500 as const,
-    color: '#6b7280',
+    color: '#5a8fc4',
     marginBottom: '4px',
   }
 
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: '32px 24px' }}>
       <div style={{ marginBottom: '24px' }}>
-        <Link href="/requests" style={{ color: '#6b7280', fontSize: '14px', textDecoration: 'none' }}>
+        <Link href="/requests" style={{ color: '#5a8fc4', fontSize: '14px', textDecoration: 'none', fontWeight: 500 }}>
           &larr; Back to requests
         </Link>
       </div>
@@ -150,7 +151,7 @@ export default function RequestDetailPage() {
         marginBottom: '24px',
       }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 700, color: '#111827' }}>
+          <h1 style={{ fontSize: '24px', fontWeight: 700, color: '#0C2340' }}>
             {request.requester?.org_name}
           </h1>
           <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginTop: '8px' }}>
@@ -167,7 +168,7 @@ export default function RequestDetailPage() {
             <span style={{ fontSize: '13px', color: categoryConf.color, fontWeight: 500 }}>
               {categoryConf.label}
             </span>
-            <span style={{ fontSize: '13px', color: '#6b7280' }}>
+            <span style={{ fontSize: '13px', color: '#5a8fc4' }}>
               Submitted {formatDate(request.request_date)}
             </span>
           </div>
@@ -196,8 +197,8 @@ export default function RequestDetailPage() {
                 style={{
                   padding: '8px 16px',
                   background: 'white',
-                  color: '#374151',
-                  border: '1px solid #d1d5db',
+                  color: '#0C2340',
+                  border: '1px solid #000000',
                   borderRadius: '8px',
                   fontSize: '14px',
                   cursor: 'pointer',
@@ -210,7 +211,7 @@ export default function RequestDetailPage() {
                 disabled={saving}
                 style={{
                   padding: '8px 16px',
-                  background: '#059669',
+                  background: '#5a8fc4',
                   color: 'white',
                   border: 'none',
                   borderRadius: '8px',
@@ -232,11 +233,11 @@ export default function RequestDetailPage() {
         background: 'white',
         padding: '24px',
         borderRadius: '12px',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
-        border: '1px solid #e5e7eb',
+        boxShadow: '0 2px 8px rgba(12,35,64,0.06)',
+        border: '1px solid #000000',
         marginBottom: '20px',
       }}>
-        <h2 style={{ fontSize: '16px', fontWeight: 600, color: '#111827', marginBottom: '16px' }}>
+        <h2 style={{ fontSize: '16px', fontWeight: 600, color: '#0C2340', marginBottom: '16px' }}>
           Request Details
         </h2>
 
@@ -250,7 +251,7 @@ export default function RequestDetailPage() {
                 ))}
               </select>
             ) : (
-              <p style={{ fontSize: '14px', color: '#111827', fontWeight: 500 }}>{statusConf.label}</p>
+              <p style={{ fontSize: '14px', color: '#0C2340', fontWeight: 500 }}>{statusConf.label}</p>
             )}
           </div>
 
@@ -263,7 +264,7 @@ export default function RequestDetailPage() {
                 ))}
               </select>
             ) : (
-              <p style={{ fontSize: '14px', color: '#111827' }}>
+              <p style={{ fontSize: '14px', color: '#0C2340' }}>
                 {DONATION_TYPE_OPTIONS.find(o => o.value === request.donation_type)?.label || request.donation_type}
               </p>
             )}
@@ -274,7 +275,7 @@ export default function RequestDetailPage() {
             {editing ? (
               <input style={inputStyle} type="number" step="0.01" value={amountRequested} onChange={(e) => setAmountRequested(e.target.value)} />
             ) : (
-              <p style={{ fontSize: '20px', color: '#111827', fontWeight: 700 }}>{formatCurrency(request.amount_requested)}</p>
+              <p style={{ fontSize: '20px', color: '#0C2340', fontWeight: 700 }}>{formatCurrency(request.amount_requested)}</p>
             )}
           </div>
 
@@ -292,7 +293,7 @@ export default function RequestDetailPage() {
             {editing ? (
               <input style={inputStyle} value={eventName} onChange={(e) => setEventName(e.target.value)} />
             ) : (
-              <p style={{ fontSize: '14px', color: '#111827' }}>{request.event_name || '--'}</p>
+              <p style={{ fontSize: '14px', color: '#0C2340' }}>{request.event_name || '--'}</p>
             )}
           </div>
 
@@ -301,7 +302,7 @@ export default function RequestDetailPage() {
             {editing ? (
               <input style={inputStyle} type="date" value={eventDate} onChange={(e) => setEventDate(e.target.value)} />
             ) : (
-              <p style={{ fontSize: '14px', color: '#111827' }}>{request.event_date ? formatDate(request.event_date) : '--'}</p>
+              <p style={{ fontSize: '14px', color: '#0C2340' }}>{request.event_date ? formatDate(request.event_date) : '--'}</p>
             )}
           </div>
         </div>
@@ -311,7 +312,7 @@ export default function RequestDetailPage() {
           {editing ? (
             <textarea style={{ ...inputStyle, resize: 'vertical' }} rows={3} value={description} onChange={(e) => setDescription(e.target.value)} />
           ) : (
-            <p style={{ fontSize: '14px', color: '#111827', lineHeight: 1.6 }}>{request.description}</p>
+            <p style={{ fontSize: '14px', color: '#0C2340', lineHeight: 1.6 }}>{request.description}</p>
           )}
         </div>
 
@@ -320,7 +321,7 @@ export default function RequestDetailPage() {
           {editing ? (
             <textarea style={{ ...inputStyle, resize: 'vertical' }} rows={2} value={notes} onChange={(e) => setNotes(e.target.value)} />
           ) : (
-            <p style={{ fontSize: '14px', color: '#6b7280' }}>{request.notes || 'No notes'}</p>
+            <p style={{ fontSize: '14px', color: '#5a8fc4' }}>{request.notes || 'No notes'}</p>
           )}
         </div>
 
@@ -329,7 +330,7 @@ export default function RequestDetailPage() {
           {editing ? (
             <textarea style={{ ...inputStyle, resize: 'vertical' }} rows={2} value={internalNotes} onChange={(e) => setInternalNotes(e.target.value)} />
           ) : (
-            <p style={{ fontSize: '14px', color: '#6b7280' }}>{request.internal_notes || 'No internal notes'}</p>
+            <p style={{ fontSize: '14px', color: '#5a8fc4' }}>{request.internal_notes || 'No internal notes'}</p>
           )}
         </div>
       </div>
@@ -339,35 +340,35 @@ export default function RequestDetailPage() {
         background: 'white',
         padding: '24px',
         borderRadius: '12px',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
-        border: '1px solid #e5e7eb',
+        boxShadow: '0 2px 8px rgba(12,35,64,0.06)',
+        border: '1px solid #000000',
         marginBottom: '20px',
       }}>
-        <h2 style={{ fontSize: '16px', fontWeight: 600, color: '#111827', marginBottom: '16px' }}>
+        <h2 style={{ fontSize: '16px', fontWeight: 600, color: '#0C2340', marginBottom: '16px' }}>
           Requester Info
         </h2>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
           <div>
             <label style={labelStyle}>Organization</label>
-            <p style={{ fontSize: '14px', color: '#111827', fontWeight: 500 }}>{request.requester?.org_name}</p>
+            <p style={{ fontSize: '14px', color: '#0C2340', fontWeight: 500 }}>{request.requester?.org_name}</p>
           </div>
           <div>
             <label style={labelStyle}>Contact</label>
-            <p style={{ fontSize: '14px', color: '#111827' }}>{request.requester?.contact_name || '--'}</p>
+            <p style={{ fontSize: '14px', color: '#0C2340' }}>{request.requester?.contact_name || '--'}</p>
           </div>
           <div>
             <label style={labelStyle}>Email</label>
-            <p style={{ fontSize: '14px', color: '#111827' }}>{request.requester?.contact_email || '--'}</p>
+            <p style={{ fontSize: '14px', color: '#0C2340' }}>{request.requester?.contact_email || '--'}</p>
           </div>
           <div>
             <label style={labelStyle}>Phone</label>
-            <p style={{ fontSize: '14px', color: '#111827' }}>{request.requester?.contact_phone || '--'}</p>
+            <p style={{ fontSize: '14px', color: '#0C2340' }}>{request.requester?.contact_phone || '--'}</p>
           </div>
         </div>
         <Link href={`/requesters/${request.requester_id}`} style={{
           display: 'inline-block',
           marginTop: '12px',
-          color: '#0C2340',
+          color: '#5a8fc4',
           fontSize: '14px',
           fontWeight: 600,
           textDecoration: 'none',
@@ -382,11 +383,11 @@ export default function RequestDetailPage() {
           background: 'white',
           padding: '24px',
           borderRadius: '12px',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
-          border: '1px solid #e5e7eb',
+          boxShadow: '0 2px 8px rgba(12,35,64,0.06)',
+          border: '1px solid #000000',
           marginBottom: '20px',
         }}>
-          <h2 style={{ fontSize: '16px', fontWeight: 600, color: '#111827', marginBottom: '16px' }}>
+          <h2 style={{ fontSize: '16px', fontWeight: 600, color: '#0C2340', marginBottom: '16px' }}>
             Quick Actions
           </h2>
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
@@ -427,7 +428,7 @@ export default function RequestDetailPage() {
                   await fetchRequest()
                   setSaving(false)
                 }}
-                style={{ padding: '8px 16px', background: '#f3f4f6', color: '#6b7280', border: 'none', borderRadius: '8px', fontWeight: 600, cursor: 'pointer', fontSize: '14px' }}
+                style={{ padding: '8px 16px', background: '#ddd8cc', color: '#0C2340', border: 'none', borderRadius: '8px', fontWeight: 600, cursor: 'pointer', fontSize: '14px' }}
               >
                 Mark Fulfilled
               </button>

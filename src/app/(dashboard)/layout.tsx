@@ -8,7 +8,7 @@ export default function DashboardLayout({
 }) {
   return (
     <ToastProvider>
-      <div style={{ minHeight: '100vh', background: '#f3f4f6' }}>
+      <div style={{ minHeight: '100vh', background: '#ddd8cc' }}>
         <Header />
         <main style={{ paddingTop: '60px' }}>
           {children}
