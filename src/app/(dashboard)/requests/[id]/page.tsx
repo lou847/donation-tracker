@@ -1,9 +1,8 @@
 'use client'
 
-import { useState, useEffect, useMemo, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/client'
 import { useToast } from '@/components/ui/Toast'
 import { formatCurrency } from '@/lib/utils/currency'
 import { formatDate } from '@/lib/utils/dates'
@@ -14,7 +13,6 @@ export default function RequestDetailPage() {
   const params = useParams()
   const router = useRouter()
   const { showToast } = useToast()
-  const supabase = useMemo(() => createClient(), [])
 
   const [request, setRequest] = useState<DonationRequestWithRequester | null>(null)
   const [loading, setLoading] = useState(true)
@@ -33,31 +31,37 @@ export default function RequestDetailPage() {
   const [internalNotes, setInternalNotes] = useState('')
 
   const fetchRequest = useCallback(async () => {
-    const { data, error } = await supabase
-      .from('donation_requests')
-      .select('*, requester:requesters(*)')
-      .eq('id', params.id)
-      .single()
-
-    if (error || !data) {
-      showToast('Request not found', 'error')
+    try {
+      const res = await fetch('/api/dashboard')
+      const data = await res.json()
+      if (!res.ok || data.error) {
+        showToast('Failed to load request', 'error')
+        router.push('/requests')
+        return
+      }
+      const allRequests = (data.requests || []) as DonationRequestWithRequester[]
+      const found = allRequests.find(r => r.id === params.id)
+      if (!found) {
+        showToast('Request not found', 'error')
+        router.push('/requests')
+        return
+      }
+      setRequest(found)
+      setStatus(found.status)
+      setAmountApproved(found.amount_approved?.toString() || '')
+      setAmountRequested(found.amount_requested?.toString() || '')
+      setDonationType(found.donation_type)
+      setDescription(found.description)
+      setEventName(found.event_name || '')
+      setEventDate(found.event_date || '')
+      setNotes(found.notes || '')
+      setInternalNotes(found.internal_notes || '')
+      setLoading(false)
+    } catch {
+      showToast('Failed to load request', 'error')
       router.push('/requests')
-      return
     }
-
-    const req = data as DonationRequestWithRequester
-    setRequest(req)
-    setStatus(req.status)
-    setAmountApproved(req.amount_approved?.toString() || '')
-    setAmountRequested(req.amount_requested?.toString() || '')
-    setDonationType(req.donation_type)
-    setDescription(req.description)
-    setEventName(req.event_name || '')
-    setEventDate(req.event_date || '')
-    setNotes(req.notes || '')
-    setInternalNotes(req.internal_notes || '')
-    setLoading(false)
-  }, [supabase, params.id, router, showToast])
+  }, [params.id, router, showToast])
 
   useEffect(() => {
     fetchRequest()
@@ -65,46 +69,59 @@ export default function RequestDetailPage() {
 
   const handleSave = async () => {
     setSaving(true)
-    const { error } = await supabase
-      .from('donation_requests')
-      .update({
-        status,
-        amount_approved: amountApproved ? parseFloat(amountApproved) : null,
-        amount_requested: amountRequested ? parseFloat(amountRequested) : null,
-        donation_type: donationType,
-        description,
-        event_name: eventName || null,
-        event_date: eventDate || null,
-        notes: notes || null,
-        internal_notes: internalNotes || null,
-        reviewed_at: (status === 'approved' || status === 'denied') ? new Date().toISOString() : request?.reviewed_at,
-        fulfilled_at: status === 'fulfilled' ? new Date().toISOString() : request?.fulfilled_at,
+    try {
+      const res = await fetch('/api/dashboard', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'update',
+          id: params.id,
+          updates: {
+            status,
+            amount_approved: amountApproved ? parseFloat(amountApproved) : null,
+            amount_requested: amountRequested ? parseFloat(amountRequested) : null,
+            donation_type: donationType,
+            description,
+            event_name: eventName || null,
+            event_date: eventDate || null,
+            notes: notes || null,
+            internal_notes: internalNotes || null,
+            reviewed_at: (status === 'approved' || status === 'denied') ? new Date().toISOString() : request?.reviewed_at,
+            fulfilled_at: status === 'fulfilled' ? new Date().toISOString() : request?.fulfilled_at,
+          },
+        }),
       })
-      .eq('id', params.id)
-
-    if (error) {
+      const data = await res.json()
+      if (!res.ok || data.error) {
+        showToast('Failed to save changes', 'error')
+      } else {
+        showToast('Changes saved!', 'success')
+        setEditing(false)
+        await fetchRequest()
+      }
+    } catch {
       showToast('Failed to save changes', 'error')
-    } else {
-      showToast('Changes saved!', 'success')
-      setEditing(false)
-      await fetchRequest()
     }
     setSaving(false)
   }
 
   const handleDelete = async () => {
     if (!confirm('Are you sure you want to delete this request?')) return
-
-    const { error } = await supabase
-      .from('donation_requests')
-      .delete()
-      .eq('id', params.id)
-
-    if (error) {
+    try {
+      const res = await fetch('/api/dashboard', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'delete', id: params.id }),
+      })
+      const data = await res.json()
+      if (!res.ok || data.error) {
+        showToast('Failed to delete request', 'error')
+      } else {
+        showToast('Request deleted', 'success')
+        router.push('/requests')
+      }
+    } catch {
       showToast('Failed to delete request', 'error')
-    } else {
-      showToast('Request deleted', 'success')
-      router.push('/requests')
     }
   }
 
@@ -395,7 +412,7 @@ export default function RequestDetailPage() {
               <button
                 onClick={async () => {
                   setSaving(true)
-                  await supabase.from('donation_requests').update({ status: 'approved', reviewed_at: new Date().toISOString() }).eq('id', params.id)
+                  await fetch('/api/dashboard', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'update', id: params.id, updates: { status: 'approved', reviewed_at: new Date().toISOString() } }) })
                   showToast('Request approved!', 'success')
                   await fetchRequest()
                   setSaving(false)
@@ -409,7 +426,7 @@ export default function RequestDetailPage() {
               <button
                 onClick={async () => {
                   setSaving(true)
-                  await supabase.from('donation_requests').update({ status: 'denied', reviewed_at: new Date().toISOString() }).eq('id', params.id)
+                  await fetch('/api/dashboard', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'update', id: params.id, updates: { status: 'denied', reviewed_at: new Date().toISOString() } }) })
                   showToast('Request denied', 'success')
                   await fetchRequest()
                   setSaving(false)
@@ -423,7 +440,7 @@ export default function RequestDetailPage() {
               <button
                 onClick={async () => {
                   setSaving(true)
-                  await supabase.from('donation_requests').update({ status: 'fulfilled', fulfilled_at: new Date().toISOString() }).eq('id', params.id)
+                  await fetch('/api/dashboard', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'update', id: params.id, updates: { status: 'fulfilled', fulfilled_at: new Date().toISOString() } }) })
                   showToast('Marked as fulfilled!', 'success')
                   await fetchRequest()
                   setSaving(false)

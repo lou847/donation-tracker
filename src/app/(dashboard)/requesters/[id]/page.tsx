@@ -1,9 +1,8 @@
 'use client'
 
-import { useState, useEffect, useMemo, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/client'
 import { formatCurrency } from '@/lib/utils/currency'
 import { formatDate } from '@/lib/utils/dates'
 import { STATUS_CONFIG, CATEGORY_CONFIG } from '@/lib/utils/constants'
@@ -11,22 +10,32 @@ import type { Requester, DonationRequestWithRequester } from '@/lib/types/databa
 
 export default function RequesterDetailPage() {
   const params = useParams()
-  const supabase = useMemo(() => createClient(), [])
 
   const [requester, setRequester] = useState<Requester | null>(null)
   const [requests, setRequests] = useState<DonationRequestWithRequester[]>([])
   const [loading, setLoading] = useState(true)
 
   const fetchData = useCallback(async () => {
-    const [requesterRes, requestsRes] = await Promise.all([
-      supabase.from('requesters').select('*').eq('id', params.id).single(),
-      supabase.from('donation_requests').select('*, requester:requesters(*)').eq('requester_id', params.id).order('created_at', { ascending: false }),
-    ])
+    try {
+      const [reqRes, dashRes] = await Promise.all([
+        fetch('/api/requesters'),
+        fetch('/api/dashboard'),
+      ])
+      const reqData = await reqRes.json()
+      const dashData = await dashRes.json()
 
-    if (requesterRes.data) setRequester(requesterRes.data as Requester)
-    if (requestsRes.data) setRequests(requestsRes.data as DonationRequestWithRequester[])
+      const allRequesters = (reqData.requesters || []) as Requester[]
+      const found = allRequesters.find(r => r.id === params.id)
+      if (found) setRequester(found)
+
+      const allRequests = (dashData.requests || []) as DonationRequestWithRequester[]
+      const filtered = allRequests.filter(r => r.requester_id === params.id)
+      setRequests(filtered)
+    } catch (err) {
+      console.error('Failed to fetch requester data:', err)
+    }
     setLoading(false)
-  }, [supabase, params.id])
+  }, [params.id])
 
   useEffect(() => {
     fetchData()
