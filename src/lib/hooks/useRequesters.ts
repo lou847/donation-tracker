@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, useMemo } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { useState, useEffect, useCallback } from 'react'
 import type { Requester, RequesterInsert } from '@/lib/types/database'
 
 export function useRequesters() {
@@ -9,26 +8,25 @@ export function useRequesters() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const supabase = useMemo(() => createClient(), [])
-
   const fetchRequesters = useCallback(async () => {
     setLoading(true)
     setError(null)
 
     try {
-      const { data, error } = await supabase
-        .from('requesters')
-        .select('*')
-        .order('org_name', { ascending: true })
+      const res = await fetch('/api/requesters')
+      const data = await res.json()
 
-      if (error) throw error
-      setRequesters(data || [])
+      if (!res.ok || data.error) {
+        throw new Error(data.error || 'Failed to fetch')
+      }
+
+      setRequesters((data.requesters || []) as Requester[])
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch requesters')
     } finally {
       setLoading(false)
     }
-  }, [supabase])
+  }, [])
 
   useEffect(() => {
     fetchRequesters()
@@ -36,49 +34,19 @@ export function useRequesters() {
 
   const createRequester = useCallback(async (requester: RequesterInsert) => {
     try {
-      const { data, error } = await supabase
-        .from('requesters')
-        .insert(requester)
-        .select()
-        .single()
-
-      if (error) throw error
+      const res = await fetch('/api/requesters', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requester),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Failed')
       await fetchRequesters()
-      return { success: true, data }
+      return { success: true, data: data.requester as Requester }
     } catch (err) {
       return { success: false, error: err instanceof Error ? err.message : 'Failed to create requester', data: null }
     }
-  }, [supabase, fetchRequesters])
+  }, [fetchRequesters])
 
-  const updateRequester = useCallback(async (id: string, updates: Partial<RequesterInsert>) => {
-    try {
-      const { error } = await supabase
-        .from('requesters')
-        .update(updates)
-        .eq('id', id)
-
-      if (error) throw error
-      await fetchRequesters()
-      return { success: true }
-    } catch (err) {
-      return { success: false, error: err instanceof Error ? err.message : 'Failed to update requester' }
-    }
-  }, [supabase, fetchRequesters])
-
-  const deleteRequester = useCallback(async (id: string) => {
-    try {
-      const { error } = await supabase
-        .from('requesters')
-        .delete()
-        .eq('id', id)
-
-      if (error) throw error
-      await fetchRequesters()
-      return { success: true }
-    } catch (err) {
-      return { success: false, error: err instanceof Error ? err.message : 'Failed to delete requester' }
-    }
-  }, [supabase, fetchRequesters])
-
-  return { requesters, loading, error, createRequester, updateRequester, deleteRequester, refetch: fetchRequesters }
+  return { requesters, loading, error, createRequester, refetch: fetchRequesters }
 }

@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, useMemo } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { useState, useEffect, useCallback } from 'react'
 import type { DonationRequestWithRequester } from '@/lib/types/database'
 
 interface DashboardStats {
@@ -24,19 +23,20 @@ export function useDashboardStats() {
   })
   const [loading, setLoading] = useState(true)
 
-  const supabase = useMemo(() => createClient(), [])
-
   const fetchStats = useCallback(async () => {
     setLoading(true)
 
     try {
-      // Fetch all requests
-      const { data: allRequests } = await supabase
-        .from('donation_requests')
-        .select('*, requester:requesters(*)')
-        .order('created_at', { ascending: false })
+      const res = await fetch('/api/dashboard')
+      const data = await res.json()
 
-      const requests = (allRequests || []) as DonationRequestWithRequester[]
+      if (!res.ok || data.error) {
+        console.error('Dashboard API error:', data.error)
+        setLoading(false)
+        return
+      }
+
+      const requests = (data.requests || []) as DonationRequestWithRequester[]
 
       const now = new Date()
       const yearStart = new Date(now.getFullYear(), 0, 1).toISOString()
@@ -84,7 +84,7 @@ export function useDashboardStats() {
     } finally {
       setLoading(false)
     }
-  }, [supabase])
+  }, [])
 
   useEffect(() => {
     fetchStats()

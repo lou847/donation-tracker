@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, useMemo } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { useState, useEffect, useCallback } from 'react'
 import type { DonationRequestWithRequester, DonationRequestInsert, DonationRequestStatus } from '@/lib/types/database'
 
 interface UseRequestsOptions {
@@ -15,36 +14,31 @@ export function useDonationRequests(options: UseRequestsOptions = {}) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const supabase = useMemo(() => createClient(), [])
-
   const fetchRequests = useCallback(async () => {
     setLoading(true)
     setError(null)
 
     try {
-      let query = supabase
-        .from('donation_requests')
-        .select('*, requester:requesters(*)')
-        .order('created_at', { ascending: false })
+      const res = await fetch('/api/dashboard')
+      const data = await res.json()
+
+      if (!res.ok || data.error) {
+        throw new Error(data.error || 'Failed to fetch')
+      }
+
+      let filtered = (data.requests || []) as DonationRequestWithRequester[]
 
       if (options.status) {
-        query = query.eq('status', options.status)
+        filtered = filtered.filter(r => r.status === options.status)
       }
 
-      if (options.category) {
-        query = query.eq('requester.category', options.category)
-      }
-
-      const { data, error } = await query
-
-      if (error) throw error
-      setRequests((data || []) as DonationRequestWithRequester[])
+      setRequests(filtered)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch requests')
     } finally {
       setLoading(false)
     }
-  }, [supabase, options.status, options.category])
+  }, [options.status])
 
   useEffect(() => {
     fetchRequests()
@@ -52,47 +46,51 @@ export function useDonationRequests(options: UseRequestsOptions = {}) {
 
   const createRequest = useCallback(async (request: DonationRequestInsert) => {
     try {
-      const { error } = await supabase
-        .from('donation_requests')
-        .insert(request)
-
-      if (error) throw error
+      const res = await fetch('/api/dashboard', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'create', request }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Failed')
       await fetchRequests()
       return { success: true }
     } catch (err) {
       return { success: false, error: err instanceof Error ? err.message : 'Failed to create request' }
     }
-  }, [supabase, fetchRequests])
+  }, [fetchRequests])
 
   const updateRequest = useCallback(async (id: string, updates: Partial<DonationRequestInsert>) => {
     try {
-      const { error } = await supabase
-        .from('donation_requests')
-        .update(updates)
-        .eq('id', id)
-
-      if (error) throw error
+      const res = await fetch('/api/dashboard', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'update', id, updates }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Failed')
       await fetchRequests()
       return { success: true }
     } catch (err) {
       return { success: false, error: err instanceof Error ? err.message : 'Failed to update request' }
     }
-  }, [supabase, fetchRequests])
+  }, [fetchRequests])
 
   const deleteRequest = useCallback(async (id: string) => {
     try {
-      const { error } = await supabase
-        .from('donation_requests')
-        .delete()
-        .eq('id', id)
-
-      if (error) throw error
+      const res = await fetch('/api/dashboard', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'delete', id }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Failed')
       await fetchRequests()
       return { success: true }
     } catch (err) {
       return { success: false, error: err instanceof Error ? err.message : 'Failed to delete request' }
     }
-  }, [supabase, fetchRequests])
+  }, [fetchRequests])
 
   return { requests, loading, error, createRequest, updateRequest, deleteRequest, refetch: fetchRequests }
 }
