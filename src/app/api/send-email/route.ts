@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer'
+import { Resend } from 'resend'
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 
@@ -9,11 +9,10 @@ function getSupabase() {
 
 export async function POST(request: Request) {
   try {
-    const gmailUser = process.env.GMAIL_USER
-    const gmailPass = process.env.GMAIL_APP_PASSWORD
+    const resendKey = process.env.RESEND_API_KEY
 
-    if (!gmailUser || !gmailPass) {
-      return NextResponse.json({ error: 'Gmail credentials not configured. Add GMAIL_USER and GMAIL_APP_PASSWORD to environment variables.' }, { status: 500 })
+    if (!resendKey) {
+      return NextResponse.json({ error: 'Resend API key not configured. Add RESEND_API_KEY to environment variables.' }, { status: 500 })
     }
 
     const body = await request.json()
@@ -23,22 +22,20 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing required fields: to, subject, body' }, { status: 400 })
     }
 
-    // Create Gmail SMTP transporter
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: gmailUser,
-        pass: gmailPass,
-      },
-    })
+    const resend = new Resend(resendKey)
 
     // Send the email
-    await transporter.sendMail({
-      from: `"Hometown Coffee" <${gmailUser}>`,
-      to,
+    const { error } = await resend.emails.send({
+      from: 'Hometown Coffee <onboarding@resend.dev>',
+      to: [to],
       subject,
       text: emailBody,
     })
+
+    if (error) {
+      console.error('Resend error:', error)
+      return NextResponse.json({ error: error.message || 'Failed to send email' }, { status: 500 })
+    }
 
     // Update the donation request with email_sent_at timestamp
     if (requestId) {
