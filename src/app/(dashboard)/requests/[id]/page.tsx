@@ -8,6 +8,7 @@ import { formatCurrency } from '@/lib/utils/currency'
 import { formatDate } from '@/lib/utils/dates'
 import { STATUS_CONFIG, CATEGORY_CONFIG, STATUS_OPTIONS, DONATION_TYPE_OPTIONS } from '@/lib/utils/constants'
 import type { DonationRequestWithRequester, DonationRequestStatus, DonationType } from '@/lib/types/database'
+import EmailReplyModal from '@/components/ui/EmailReplyModal'
 
 export default function RequestDetailPage() {
   const params = useParams()
@@ -18,6 +19,7 @@ export default function RequestDetailPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [editing, setEditing] = useState(false)
+  const [showEmailModal, setShowEmailModal] = useState(false)
 
   // Edit fields
   const [status, setStatus] = useState<DonationRequestStatus>('new')
@@ -407,7 +409,28 @@ export default function RequestDetailPage() {
           <h2 style={{ fontSize: '16px', fontWeight: 600, color: '#0C2340', marginBottom: '16px' }}>
             Quick Actions
           </h2>
+          {request.email_sent_at && (
+            <div style={{
+              padding: '8px 14px',
+              background: '#dcfce7',
+              borderRadius: '8px',
+              fontSize: '13px',
+              color: '#16a34a',
+              marginBottom: '12px',
+              fontWeight: 500,
+            }}>
+              &#9989; Email sent on {new Date(request.email_sent_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+            </div>
+          )}
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            {request.requester?.contact_email && (
+              <button
+                onClick={() => setShowEmailModal(true)}
+                style={{ padding: '8px 16px', background: '#5a8fc4', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 600, cursor: 'pointer', fontSize: '14px' }}
+              >
+                &#9993; Reply to Requester
+              </button>
+            )}
             {request.status !== 'approved' && (
               <button
                 onClick={async () => {
@@ -458,6 +481,15 @@ export default function RequestDetailPage() {
             </button>
           </div>
         </div>
+      )}
+
+      {/* Email Reply Modal */}
+      {showEmailModal && request && (
+        <EmailReplyModal
+          request={request}
+          onClose={() => setShowEmailModal(false)}
+          onSent={() => fetchRequest()}
+        />
       )}
     </div>
   )

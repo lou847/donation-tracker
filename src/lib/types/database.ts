@@ -61,6 +61,8 @@ export interface DonationRequest {
   internal_notes: string | null
   tax_receipt_sent: boolean
   follow_up_date: string | null
+  email_sent_at: string | null
+  email_subject: string | null
   created_by: string | null
   created_at: string
   updated_at: string
